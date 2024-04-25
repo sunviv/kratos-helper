@@ -10,7 +10,7 @@ import (
 
 type Code int64 // 业务响应状态码
 
-var codeMessageMap map[Code]string // 业务状态码映射表
+var codeMessageMap = make(map[Code]string) // 业务状态码映射表
 
 func (c Code) Message() string {
 	return codeMessageMap[c]
@@ -73,6 +73,10 @@ func (ce CodeError) GRPCStatus() *status.Status {
 	return s
 }
 
-func Init(messageMap map[Code]string) {
-	codeMessageMap = messageMap
+func Init(messageMaps ...map[Code]string) {
+	for _, messageMap := range messageMaps {
+		for k, v := range messageMap {
+			codeMessageMap[k] = v
+		}
+	}
 }
